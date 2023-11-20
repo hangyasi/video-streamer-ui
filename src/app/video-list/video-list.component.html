@@ -1,0 +1,21 @@
+<div class="wrapper">
+
+<div *ngIf="videos?.length" id="card-container">
+    <div *ngFor="let video of videos" >
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>{{video.name}}</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image [src]="'data:image/jpeg;base64,' + video.image">
+            <mat-card-content>
+                <p>
+                    {{video.summary}}
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button (click)="setAndGoToPlayer(video)">Megnéz</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div></div>

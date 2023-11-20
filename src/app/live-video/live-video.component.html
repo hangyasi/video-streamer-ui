@@ -1,0 +1,19 @@
+
+<div class="wrapper">
+
+    <button type="button" class="btn btn-primary" (click)="initialize()">Inicializálás</button>
+    <button type="button" class="btn btn-primary" (click)="createOffer()">Kapcsolódás</button>
+
+    <div class="videos">
+      <span>
+        <h3>Helyi stream</h3>
+        <video [srcObject]="localStream" muted id="webcamVideo" autoplay playsinline></video>
+      </span>
+        <span>
+        <h3>Távoli stream</h3>
+        <video [srcObject]="remoteStream" id="remoteVideo" autoplay playsinline></video>
+      </span>
+
+
+    </div>
+</div>
