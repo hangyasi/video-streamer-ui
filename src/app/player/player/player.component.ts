@@ -37,7 +37,7 @@ export class PlayerComponent implements AfterViewInit {
         this.videoElement
     );
 
-    this.player.load('http://localhost:8080/dash/' + this._service.video.path + '/manifest').then(function () {
+    this.player.load('http://localhost:8080/dash/' + this._service.video.id + '/manifest').then(function () {
       console.log('Videó inicializálva');
     });
   }
