@@ -30,6 +30,12 @@ export class PlayerComponent implements AfterViewInit {
 
   private initPlayer() {
     this.player = new shaka.Player(this.videoElement);
+    let token = sessionStorage.getItem("stream.token");
+    this.player.getNetworkingEngine().registerRequestFilter(function(type: number, request: { headers: { [x: string]: string; }; }) {
+
+        request.headers['Authorization'] = "Bearer " + token;
+
+    });
 
     const ui = new shaka.ui.Overlay(
         this.player,

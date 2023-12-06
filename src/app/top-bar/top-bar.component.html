@@ -1,6 +1,8 @@
-
-  <h1>Video streaming UI</h1>
-
+<div class="top-bar">
+    <h1 *ngIf="!authService.isLoggedIn()">Videó streaming UI</h1>
+    <h1 *ngIf="authService.isLoggedIn()">Üdvözöljük, {{authService.getUserName()}}</h1>
+    <button (click)="authService.logout()" *ngIf="authService.isLoggedIn()" mat-raised-button>Kijelentkezés</button>
+</div>
 
 
 

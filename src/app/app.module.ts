@@ -1,18 +1,23 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { VideoListComponent } from './video-list/video-list.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatCardModule} from "@angular/material/card";
 import { PlayerComponent } from './player/player/player.component';
 import { TabPanelComponent } from './tab-panel/tab-panel.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { LiveVideoComponent } from './live-video/live-video.component';
+import { LoginComponent } from './login/login.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {AuthenticationInterceptor} from "./auth/authentication.interceptor";
+import {AuthGuard} from "./auth/auth-guard.service";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   imports: [
@@ -21,11 +26,15 @@ import { LiveVideoComponent } from './live-video/live-video.component';
     HttpClientModule,
     MatCardModule,
     RouterModule.forRoot([
-      {path: '', component: TabPanelComponent},
-      {path: 'player', component: PlayerComponent},
+      {path: '', component: TabPanelComponent, canActivate: [AuthGuard]},
+      {path: 'player', component: PlayerComponent, canActivate: [AuthGuard]},
+      {path: 'login', component: LoginComponent},
     ]),
     MatTabsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,
@@ -33,11 +42,15 @@ import { LiveVideoComponent } from './live-video/live-video.component';
     VideoListComponent,
     PlayerComponent,
     TabPanelComponent,
-    LiveVideoComponent
+    LiveVideoComponent,
+    LoginComponent
   ],
   bootstrap: [
     AppComponent
-  ]
+  ],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true},
+  ],
 })
 export class AppModule { }
 

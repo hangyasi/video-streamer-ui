@@ -1,4 +1,5 @@
 import {AfterViewInit, Component} from '@angular/core';
+import {AuthenticationService} from "../auth/authentication.service";
 
 @Component({
   selector: 'app-live-video',
@@ -11,7 +12,8 @@ export class LiveVideoComponent implements AfterViewInit {
   peerConnection: RTCPeerConnection;
   localStream: MediaStream;
   remoteStream: MediaStream;
-  constructor(){}
+  remoteUser: string = "";
+  constructor(public authService: AuthenticationService){}
 
   ngAfterViewInit(): void {
     this.conn = new WebSocket('ws://localhost:8080/signaling');
@@ -26,10 +28,12 @@ export class LiveVideoComponent implements AfterViewInit {
       switch (content.event) {
 
         case "offer":
-          this.handleOffer(data);
+          this.handleOffer(data.offer);
+          this.remoteUser = data.username;
           break;
         case "answer":
-          this.handleAnswer(data);
+          this.remoteUser = data.username;
+          this.handleAnswer(data.answer);
           break;
         case "candidate":
           this.handleCandidate(data);
@@ -98,7 +102,7 @@ export class LiveVideoComponent implements AfterViewInit {
     this.peerConnection.createOffer((offer) => {
       this.send({
         event : "offer",
-        data : offer
+        data : {offer: offer, username: this.authService.getUserName()}
       });
       this.peerConnection.setLocalDescription(offer);
     }, (error) => {
@@ -112,7 +116,7 @@ export class LiveVideoComponent implements AfterViewInit {
       this.peerConnection.setLocalDescription(answer);
       this.send({
         event : "answer",
-        data : answer
+        data : {answer: answer, username: this.authService.getUserName()}
       });
     }, (error) => {
       alert("Error creating an answer");
@@ -127,4 +131,12 @@ export class LiveVideoComponent implements AfterViewInit {
     this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
     console.log("Sikeresen kapcsolódva egy másik klienshez");
   };
+
+  closeConnection() {
+    this.conn.close();
+    this.peerConnection.close();
+    this.remoteStream.getTracks().forEach((track) => track.stop())
+    this.localStream.getTracks().forEach((track) => track.stop())
+    this.remoteUser = ""
+  }
 }

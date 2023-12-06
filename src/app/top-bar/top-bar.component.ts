@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {AuthenticationService} from "../auth/authentication.service";
 
 @Component({
   selector: 'app-top-bar',
@@ -7,6 +8,10 @@ import { Component } from '@angular/core';
 })
 export class TopBarComponent {
 
+  public authService: AuthenticationService;
+  constructor(authService: AuthenticationService) {
+    this.authService = authService;
+  }
 }
 
 
